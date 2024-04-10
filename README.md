@@ -7,6 +7,8 @@
     - Search 'render html' in api
 - has Auth0 plugin to make sierra mad
 - has its own secrets file for database login
+- write guide on how to connect sqlite to streamlit and make the connection
+    - include secrets.toml, requirements.txt, 
 ## Things to Teach/Say:
 - It's just a python library. Which means basically anything you can do in python can be integrated with Streamlit
 - Brief intro to session state
