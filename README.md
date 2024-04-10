@@ -11,4 +11,4 @@
 - It's just a python library. Which means basically anything you can do in python can be integrated with Streamlit
 - Brief intro to session state
 - On changes, it reruns the page from top to bottom
-<!-- https://docs.streamlit.io/develop/concepts/connections/connecting-to-data -->
+- https://docs.streamlit.io/develop/concepts/connections/connecting-to-data
