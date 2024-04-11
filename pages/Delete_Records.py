@@ -33,7 +33,7 @@ submit = delete_form.form_submit_button(':red[Delete Entry]')
 
 # When the user submits, remove the record and show the generated SQL command
 if submit:
-    sql_command = DB_Functions.delete_record_by_ID(choose_relation, id)
+    sql_command = DB_Functions.delete_record_by_ID_testing(choose_relation, id)
     st.write("**Entry Deleted Using the Following SQL Command:**")
     st.code(sql_command, language='sql')
 

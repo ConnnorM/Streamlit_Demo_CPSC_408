@@ -161,7 +161,7 @@ def delete_record_by_ID(relation, remove_id):
         # SQL Command
         command = '''
             DELETE FROM %s
-            WHERE %s = %s;
+            WHERE %d = %d;
             ''' % (relation, rel_id, remove_id)
         
         s.execute(text(command))

@@ -1,8 +1,6 @@
 # Imports
 # Streamlit: Used to create the front-end GUI
 import streamlit as st
-# SQLAlchemy: Some back-end nonsense that helps Streamlit talk to SQLite
-from sqlalchemy import text
 # DB_Functions: All of the database CRUD functions and similar stuff goes here
 from Helpers import DB_Functions
 
