@@ -3,16 +3,20 @@
 import streamlit as st
 # DB_Functions: All of the database CRUD functions and similar stuff goes here
 from Helpers import DB_Functions
+# sqlite3: SQLite is the DBMS we are using for this demo
+import sqlite3
 
 # -----------------------------------------------------------------------------------
 # Global Variables
 # Set the default configuration for our GUI
 st.set_page_config(page_title="CPSC 408 Demo", layout="wide", page_icon=":wave:")
-# Create the SQL connection to movie_reviews_db as specified in your secrets file.
-conn = st.connection('movie_reviews_db', type='sql')
+# Create the SQL connection to movie_reviews_db
+conn = sqlite3.connect("movie_reviews_db.db")
+c = conn.cursor()
 # Add the SQL connection to the Streamlit session state so we can access it from any page
 if 'conn' not in st.session_state:
     st.session_state.conn = conn
+    st.session_state.c = c
     st.session_state.relations = ['movies', 'reviews', 'studios']
 
 # -----------------------------------------------------------------------------------

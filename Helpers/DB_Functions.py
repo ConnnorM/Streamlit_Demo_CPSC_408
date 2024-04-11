@@ -17,8 +17,8 @@ def initialize_movies_table():
     # Create the table and put constraints on attributes
     # Not entirely sure why, but if you don't use the 'with' keyword to lump all of the conn.session functions
     # and handle resource management, queries won't close and the database will remain locked forever 
-    with st.session_state.conn.session as s:
-        s.execute(text(
+    with st.session_state.conn.cursor() as c:
+        c.execute(text(
             '''
             CREATE TABLE IF NOT EXISTS movies(
                 movie_ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -33,7 +33,7 @@ def initialize_movies_table():
             '''
         ))
         # Remove any records that already exist
-        s.execute(text(
+        c.execute(text(
             '''
             DELETE FROM movies;
             '''
@@ -48,7 +48,7 @@ def initialize_movies_table():
         
         # Load inital dataset into table
         for m in movies:
-            s.execute(text(
+            c.execute(text(
                 '''
                 INSERT INTO movies (movie_ID, title, runtime, budget, studio_ID, critic_score, genre, p_safe_rating)
                 VALUES (%d, '%s', %d, %d, %d, %d, '%s', '%s');
@@ -57,7 +57,7 @@ def initialize_movies_table():
             )
 
         # Commit the operations
-        s.commit()
+        c.commit()
 
 # initialize_reviews_table: Create the reviews table and assign default entries.
 @st.cache_data
@@ -65,8 +65,8 @@ def initialize_reviews_table():
     # Create the table and put constraints on attributes
     # Not entirely sure why, but if you don't use the 'with' keyword to lump all of the conn.session functions
     # together and handle resource management, queries won't close and the database will remain locked forever 
-    with st.session_state.conn.session as s:
-        s.execute(text(
+    with st.session_state.conn.cursor() as c:
+        c.execute(text(
             '''
             CREATE TABLE IF NOT EXISTS reviews(
                 review_ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -78,7 +78,7 @@ def initialize_reviews_table():
             '''
         ))
         # Remove any records that already exist
-        s.execute(text(
+        c.execute(text(
             '''
             DELETE FROM reviews;
             '''
@@ -91,7 +91,7 @@ def initialize_reviews_table():
         
         # Load inital dataset into table
         for r in reviews:
-            s.execute(text(
+            c.execute(text(
                 '''
                 INSERT INTO reviews (review_ID, username, movie_ID, score, review_text)
                 VALUES (%d, '%s', %d, %d, %s);
@@ -100,7 +100,7 @@ def initialize_reviews_table():
             )
 
         # Commit the operations
-        s.commit()
+        c.commit()
 
 # initialize_studios_table: Create the studios table and assign default entries.
 @st.cache_data
@@ -108,8 +108,8 @@ def initialize_studios_table():
     # Create the table and put constraints on attributes
     # Not entirely sure why, but if you don't use the 'with' keyword to lump all of the conn.session functions
     # together and handle resource management, queries won't close and the database will remain locked forever 
-    with st.session_state.conn.session as s:
-        s.execute(text(
+    with st.session_state.conn.cursor() as c:
+        c.execute(text(
             '''
             CREATE TABLE IF NOT EXISTS studios(
                 studio_ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -119,7 +119,7 @@ def initialize_studios_table():
             '''
         ))
         # Remove any records that already exist
-        s.execute(text(
+        c.execute(text(
             '''
             DELETE FROM studios;
             '''
@@ -132,7 +132,7 @@ def initialize_studios_table():
         
         # Load inital dataset into table
         for stu in studios:
-            s.execute(text(
+            c.execute(text(
                 '''
                 INSERT INTO studios (studio_ID, name, location)
                 VALUES (%d, '%s', %s);
@@ -141,45 +141,47 @@ def initialize_studios_table():
             )
 
         # Commit the operations
-        s.commit()
+        c.commit()
 
 # get_all_records: Takes in a relation's name and returns the relation as a dataframe
 def get_all_records(relation):
-    df = st.session_state.conn.query(
-        '''
-        SELECT *
-        FROM %s;
-        ''' % relation
-    )
+    with st.session_state.conn.cursor() as c:
+        df = c.execute(
+            '''
+            SELECT *
+            FROM %s;
+             ''' % relation
+        )
 
     return df
 
 # delete_record: pass in a relation and an ID to remove
 def delete_record_by_ID(relation, remove_id):
     rel_id = relation[:-1] + '_ID'
-    with st.session_state.conn.session as s:
-        # SQL Command
-        command = '''
-            DELETE FROM %s
-            WHERE %d = %d;
-            ''' % (relation, rel_id, remove_id)
-        
-        s.execute(text(command))
+    # SQL Command
+    command = '''
+        DELETE FROM %s
+        WHERE %s = %d;
+        ''' % (relation, rel_id, remove_id)
+    
+    with st.session_state.conn:    
+        st.session_state.c.execute(text(command))
         # Commit the operation
-        s.commit()
+        st.session_state.c.commit()
     # Return the SQL command as a string
     return command
 
 # add_record_reviews: pass in the attributes of the review and update the reviews relation
 def add_record_reviews(uname, m_ID, scr, rvw_txt):
-    with st.session_state.conn.session as s:
-        # SQL Command
-        command = '''
-            INSERT INTO reviews(username, movie_ID, score, review_text)
-            VALUES('%s',%d,%d,'%s');
-            ''' % (uname, m_ID, scr, rvw_txt)
-        s.execute(text(command))
+    # SQL Command
+    command = '''
+        INSERT INTO reviews(username, movie_ID, score, review_text)
+        VALUES('%s',%d,%d,'%s');
+        ''' % (uname, m_ID, scr, rvw_txt)
+    
+    with st.session_state.conn:
+        c.execute(text(command))
         # Commit the operation
-        s.commit()
+        c.commit()
     # Return the SQL command as a string
     return command
