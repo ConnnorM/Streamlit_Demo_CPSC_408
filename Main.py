@@ -3,6 +3,8 @@
 import streamlit as st
 # SQLAlchemy: Some back-end nonsense that helps Streamlit talk to SQLite
 from sqlalchemy import text
+# DB_Functions: All of the database CRUD functions and similar stuff goes here
+from Helpers import DB_Functions
 
 # -----------------------------------------------------------------------------------
 # Global Variables
@@ -13,74 +15,43 @@ conn = st.connection('movie_reviews_db', type='sql')
 # Add the SQL connection to the Streamlit session state so we can access it from any page
 if 'conn' not in st.session_state:
     st.session_state.conn = conn
+    st.session_state.relations = ['movies', 'reviews', 'studios']
+
 # -----------------------------------------------------------------------------------
 # Functions
-# initialize_movies_table: Create the movies table and assign default entries.
-# Takes in conn.session
-@st.cache_data
-def initialize_movies_table():
-    # Create the table and put constraints on attributes
-    # Not entirely sure why, but if you don't use the 'with' keyword to lump all of the conn.session functions
-    # and handle resource management, queries won't close and the database will remain locked forever 
+
+# -----------------------------------------------------------------------------------
+# Main code
+# Create the different table with default entries
+DB_Functions.initialize_movies_table()
+DB_Functions.initialize_reviews_table()
+DB_Functions.initialize_studios_table()
+
+# -----------------------------------------------------------------------------------
+# GUI code
+st.title("CPSC 408 Streamlit Demo with SQLite")
+st.header("Example Final Project: Movies Database", divider='rainbow')
+st.subheader("Main Page :sunglasses:", divider="red")
+st.write("This page loads first! It creates the connection to the SQLite database and initializes our tables.")
+c1 = '''
+    conn = st.connection('movie_reviews_db', type='sql')
     with conn.session as s:
         s.execute(text(
-            '''
+            \'\'\'
             CREATE TABLE IF NOT EXISTS movies(
                 movie_ID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                 title TEXT NOT NULL,
                 runtime INTEGER,
                 budget INTEGER,
+                studio_ID INTEGER NOT NULL,
                 critic_score INTEGER,
                 genre TEXT,
                 p_safe_rating TEXT
             );
-            '''
+            \'\'\'
         ))
-        # Remove any records that already exist
-        s.execute(text(
-            '''
-            DELETE FROM movies;
-            '''
-            )
-        )
-        # Create initial dataset
-        movies = {'The LEGO Movie': [1, 100, 1000000, 100, 'Action/Comedy', 'P Safe Approved'],
-                'Kung Fu Panda 4': [2, 95, 2000000, 45, 'Action/Comedy', 'P Safe Approved'],
-                'Whiplash': [3, 120, 500000, 88, 'Drama', 'P Safe Not Approved'],
-                'Iron Man 15': [4, 117, 234567890, 62, 'Action/Comedy', 'P Safe Approved'],
-                'Healthy Panther Documentary': [5, 35, 10, 50, 'Documentary', 'P Safe Loves This Movie']}
-        
-        # Load inital dataset into table
-        for m in movies:
-            s.execute(text(
-                '''
-                INSERT INTO movies (movie_ID, title, runtime, budget, critic_score, genre, p_safe_rating)
-                VALUES (%d, '%s', %d, %d, %d, '%s', '%s');
-                ''' % (movies[m][0], m, movies[m][1], movies[m][2], movies[m][3], movies[m][4], movies[m][5],)
-                )
-            )
-
-        # Commit the operations
-        s.commit()
-
-# query: Takes the connection session, and the relation and returns the relation as a dataframe
-def get_all_records(relation):
-    df = conn.query(
-        '''
-        SELECT *
-        FROM %s;
-        ''' % relation
-    )
-
-    return df
-
-# -----------------------------------------------------------------------------------
-# Main code
-# Create the movies table with default entries
-initialize_movies_table()
-
-# Get the movies table as a dataframe
-movies_df = get_all_records('movies')
-
-st.write("Movies:")
-st.dataframe(movies_df.set_index('movie_ID'))
+'''
+st.code(c1, language='python')
+st.caption("See st.connection in the first line? Streamlit even has a built-in function to help you connect to different databases!")
+st.subheader("Now What?", divider="blue")
+st.write("Click on a page in the sidebar to the left to see the SQL demos.")

@@ -1,15 +1,13 @@
 # Streamlit_Demo_CPSC_408
 - A demo of Streamlit for CPSC 408 final project
 ## TODO:
-- Make simple version of our movies database that works like the final project
-    - movies, reviews, studio
-- Connect to sql server and show that it's easy
-- Show html/css options for the nerds
-    - Search 'render html' in api
-- has Auth0 plugin to make sierra mad
-- has its own secrets file for database login
+- add and delete aren't actually updating the db file for some reason
+- mention has its own secrets file for database login
 - write guide on how to connect sqlite to streamlit and make the connection
     - include secrets.toml, requirements.txt, 
+- then do a demo of creating a basic output from scratch just reading in a csv or something
+    - point is to show how easy it is
+    - run through columns, tabs, layout options, css, dataframes, quickly show session_state and add a page, cache data, emojis, sort df by clicking, dividers and headers, auto rerun feature, darkmode last lol, html/css render html,
 ## Things to Teach/Say:
 - It's just a python library. Which means basically anything you can do in python can be integrated with Streamlit
 - specifically designed to do data viz and dashboards
