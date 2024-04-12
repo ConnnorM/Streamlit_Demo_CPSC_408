@@ -10,6 +10,10 @@ import sqlite3
 # Global Variables
 # Set the default configuration for our GUI
 st.set_page_config(page_title="CPSC 408 Demo", layout="wide", page_icon=":wave:")
+
+
+
+
 # Create the SQL connection to movie_reviews_db
 conn = sqlite3.connect("movie_reviews_db.db", check_same_thread=False)
 c = conn.cursor()

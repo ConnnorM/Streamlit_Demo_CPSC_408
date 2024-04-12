@@ -50,3 +50,9 @@
 - HTML/CSS Customization
     - Search Render HTML
 - Dark Mode
+
+### CSS Resources
+- Using CSS with Streamlit
+    - https://www.akratech.com/customizing-streamlit-apps-by-rendering-html/
+- try youtube videos? a calculator one seems promising enough
+- https://blog.streamlit.io/how-to-build-your-own-streamlit-component/
