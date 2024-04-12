@@ -3,22 +3,19 @@
 # Imports
 # Streamlit: Used to create the front-end GUI
 import streamlit as st
-# SQLAlchemy: Some back-end nonsense that helps Streamlit talk to SQLite
-from sqlalchemy import text
-
-# -----------------------------------------------------------------------------------
-# Global Variables
+# Pandas: Allows you to use dataframes as a data structure
+import pandas as pd
 
 # -----------------------------------------------------------------------------------
 # Functions
-# initialize_movies_table: Create the movies table and assign default entries.
+# initialize_movies_table: Create the movies table and assign default entries. This function only runs
+# when you first start the app thanks to the st.cache_data decorator.
 @st.cache_data
 def initialize_movies_table():
-    # Create the table and put constraints on attributes
-    # Not entirely sure why, but if you don't use the 'with' keyword to lump all of the conn.session functions
-    # and handle resource management, queries won't close and the database will remain locked forever 
-    with st.session_state.conn.cursor() as c:
-        c.execute(text(
+    # Using the with keyword for resource management makes things nicer. You don't have to do it this way
+    with st.session_state.conn:
+        # Create the table and put constraints on attributes
+        st.session_state.c.execute(
             '''
             CREATE TABLE IF NOT EXISTS movies(
                 movie_ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -31,13 +28,13 @@ def initialize_movies_table():
                 p_safe_rating TEXT
             );
             '''
-        ))
-        # Remove any records that already exist
-        c.execute(text(
+        )
+        # Remove any records that already exist. Only doing this so that the demo runs the same
+        # way every time.
+        st.session_state.c.execute(
             '''
             DELETE FROM movies;
             '''
-            )
         )
         # Create initial dataset
         movies = {'The LEGO Movie': [1, 100, 1000000, 1, 100, 'Action/Comedy', 'P Safe Approved'],
@@ -48,25 +45,24 @@ def initialize_movies_table():
         
         # Load inital dataset into table
         for m in movies:
-            c.execute(text(
+            st.session_state.c.execute(
                 '''
                 INSERT INTO movies (movie_ID, title, runtime, budget, studio_ID, critic_score, genre, p_safe_rating)
                 VALUES (%d, '%s', %d, %d, %d, %d, '%s', '%s');
                 ''' % (movies[m][0], m, movies[m][1], movies[m][2], movies[m][3], movies[m][4], movies[m][5], movies[m][6])
-                )
             )
 
         # Commit the operations
-        c.commit()
+        st.session_state.conn.commit()
 
-# initialize_reviews_table: Create the reviews table and assign default entries.
+# initialize_reviews_table: Create the reviews table and assign default entries. This function only runs
+# when you first start the app thanks to the st.cache_data decorator
 @st.cache_data
 def initialize_reviews_table():
-    # Create the table and put constraints on attributes
-    # Not entirely sure why, but if you don't use the 'with' keyword to lump all of the conn.session functions
-    # together and handle resource management, queries won't close and the database will remain locked forever 
-    with st.session_state.conn.cursor() as c:
-        c.execute(text(
+    # Using the with keyword for resource management makes things nicer. You don't have to do it this way
+    with st.session_state.conn:
+        # Create the table and put constraints on attributes
+        st.session_state.c.execute(
             '''
             CREATE TABLE IF NOT EXISTS reviews(
                 review_ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -76,13 +72,13 @@ def initialize_reviews_table():
                 review_text TEXT
             );
             '''
-        ))
-        # Remove any records that already exist
-        c.execute(text(
+        )
+        # Remove any records that already exist. Only doing this so that the demo runs the same
+        # way every time.
+        st.session_state.c.execute(
             '''
             DELETE FROM reviews;
             '''
-            )
         )
         # Create initial dataset
         reviews = {1: ['SQL_Lover_444', 1, 100, "'Wow everything really is awesome when youre part of a team'"],
@@ -91,25 +87,24 @@ def initialize_reviews_table():
         
         # Load inital dataset into table
         for r in reviews:
-            c.execute(text(
+            st.session_state.c.execute(
                 '''
                 INSERT INTO reviews (review_ID, username, movie_ID, score, review_text)
                 VALUES (%d, '%s', %d, %d, %s);
                 ''' % (r, reviews[r][0], reviews[r][1], reviews[r][2], reviews[r][3])
-                )
             )
 
         # Commit the operations
-        c.commit()
+        st.session_state.conn.commit()
 
-# initialize_studios_table: Create the studios table and assign default entries.
+# initialize_studios_table: Create the studios table and assign default entries. This function only runs
+# when you first start the app thanks to the st.cache_data decorator.
 @st.cache_data
 def initialize_studios_table():
-    # Create the table and put constraints on attributes
-    # Not entirely sure why, but if you don't use the 'with' keyword to lump all of the conn.session functions
-    # together and handle resource management, queries won't close and the database will remain locked forever 
-    with st.session_state.conn.cursor() as c:
-        c.execute(text(
+    # Using the with keyword for resource management makes things nicer. You don't have to do it this way
+    with st.session_state.conn:
+        # Create the table and put constraints on attributes 
+        st.session_state.c.execute(
             '''
             CREATE TABLE IF NOT EXISTS studios(
                 studio_ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -117,13 +112,13 @@ def initialize_studios_table():
                 location TEXT
             );
             '''
-        ))
-        # Remove any records that already exist
-        c.execute(text(
+        )
+        # Remove any records that already exist. Only doing this so that the demo runs the same
+        # way every time.
+        st.session_state.c.execute(
             '''
             DELETE FROM studios;
             '''
-            )
         )
         # Create initial dataset
         studios = {1: ['Cool Movie Studio', "'Disneyland, California'"],
@@ -132,56 +127,59 @@ def initialize_studios_table():
         
         # Load inital dataset into table
         for stu in studios:
-            c.execute(text(
+            st.session_state.c.execute(
                 '''
                 INSERT INTO studios (studio_ID, name, location)
                 VALUES (%d, '%s', %s);
                 ''' % (stu, studios[stu][0], studios[stu][1])
-                )
             )
 
         # Commit the operations
-        c.commit()
+        st.session_state.conn.commit()
 
 # get_all_records: Takes in a relation's name and returns the relation as a dataframe
 def get_all_records(relation):
-    with st.session_state.conn.cursor() as c:
-        df = c.execute(
-            '''
-            SELECT *
-            FROM %s;
-             ''' % relation
-        )
+    query = st.session_state.c.execute(
+        '''
+        SELECT *
+        FROM %s;
+            ''' % relation
+    )
 
-    return df
+    # Get a list of column names from the relation
+    cols = [column[0] for column in query.description]
+    # Use the column names list and the query.fetchall()'s output (tuples) to make a dataframe and return it
+    return pd.DataFrame.from_records(data = query.fetchall(), columns = cols)
 
-# delete_record: pass in a relation and an ID to remove
+# delete_record: pass in a relation and an ID to remove. Returns the SQL command it executed
 def delete_record_by_ID(relation, remove_id):
-    rel_id = relation[:-1] + '_ID'
-    # SQL Command
-    command = '''
-        DELETE FROM %s
-        WHERE %s = %d;
-        ''' % (relation, rel_id, remove_id)
-    
-    with st.session_state.conn:    
-        st.session_state.c.execute(text(command))
+    with st.session_state.conn:
+        rel_id = relation[:-1] + '_ID'
+        # SQL Command
+        command = '''
+            DELETE FROM %s
+            WHERE %s = %d;
+            ''' % (relation, rel_id, remove_id)
+        
+        
+        st.session_state.c.execute(command)
         # Commit the operation
-        st.session_state.c.commit()
+        st.session_state.conn.commit()
     # Return the SQL command as a string
     return command
 
-# add_record_reviews: pass in the attributes of the review and update the reviews relation
+# add_record_reviews: pass in the attributes of the review and update the reviews relation.
+# Returns the SQL command it executed.
 def add_record_reviews(uname, m_ID, scr, rvw_txt):
-    # SQL Command
-    command = '''
-        INSERT INTO reviews(username, movie_ID, score, review_text)
-        VALUES('%s',%d,%d,'%s');
-        ''' % (uname, m_ID, scr, rvw_txt)
-    
     with st.session_state.conn:
-        c.execute(text(command))
+        # SQL Command
+        command = '''
+            INSERT INTO reviews(username, movie_ID, score, review_text)
+            VALUES('%s',%d,%d,'%s');
+            ''' % (uname, m_ID, scr, rvw_txt)
+        
+        st.session_state.c.execute(command)
         # Commit the operation
-        c.commit()
+        st.session_state.conn.commit()
     # Return the SQL command as a string
     return command

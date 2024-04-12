@@ -1,10 +1,6 @@
 # Streamlit_Demo_CPSC_408
-- A demo of Streamlit for CPSC 408 final project
+- A demo of Streamlit for the CPSC 408 final project
 ## TODO:
-- add and delete aren't actually updating the db file for some reason
-- mention has its own secrets file for database login
-- write guide on how to connect sqlite to streamlit and make the connection
-    - include secrets.toml, requirements.txt, 
 - then do a demo of creating a basic output from scratch just reading in a csv or something
     - point is to show how easy it is
     - run through columns, tabs, layout options, css, dataframes, quickly show session_state and add a page, cache data, emojis, sort df by clicking, dividers and headers, auto rerun feature, darkmode last lol, html/css render html,
