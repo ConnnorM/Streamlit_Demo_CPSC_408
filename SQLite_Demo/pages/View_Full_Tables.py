@@ -24,7 +24,7 @@ rel_id = choose_relation[:-1] + '_ID'
 st.dataframe(df.set_index(rel_id))
 
 # Goofy stuff
-st.subheader("OMG WOWIE SO COOL! But how hard was that..?", divider='rainbow')
+st.subheader("Wow very cool, but how hard was that..?", divider='rainbow')
 # If the button is pressed, then do the following code:
 if st.button(":green[Show Me the Code!]"):
     c1 = '''
@@ -36,3 +36,10 @@ if st.button(":green[Show Me the Code!]"):
     # Code block with python syntax and line numbers are displayed!
     st.code(c1, language='python', line_numbers=True)
     st.subheader("Only 4 lines of code??? :shocked_face_with_exploding_head:")
+
+# -----------------------------------------------------------------------------------
+# CSS File Import
+with open('./Helpers/CSS_Stuff.css') as f:
+    css = f.read()
+
+st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)

@@ -1,0 +1,55 @@
+/* Gets rid of the Made By Streamlit watermark I think? */
+.stApp > header {
+    background-color: transparent;
+}
+
+/* Applies to the whole app. Like using body normally */
+.stApp {
+    margin: auto;
+    font-family: 'Times New Roman', Times, serif;
+    overflow: auto;
+    background: linear-gradient(1deg, #d10e0e 40%, #f82c2c 60%, #ebb7b7 80%, #ffffff 98%);
+    animation: gradient 15s ease infinite;
+    background-size: 400% 400%;
+    background-attachment: fixed;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5 {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+/* Streamlit Button Widgets */
+.stButton {
+    color: rgb(57, 219, 36);
+}
+
+/* Streamlit Form Widgets */
+[data-testid="stForm"] {
+    background: rgb(195, 253, 255);
+    border-style: solid;
+    border-color: white;
+    border-width: 10px;
+
+    /* Applies to Form Elements' Labels  */
+    p {
+        font-weight: bold;
+    }
+}
+
+/* Dataframes */
+.glideDataEditor {
+    background-color: rgba(153, 0, 255, 0.1);
+}
+
+/* Code Blocks */
+.stCodeBlock {
+    pre {
+        background-color: rgba(203, 239, 248, 0.8);
+        background-image: url(https://news.chapman.edu/wp-content/uploads/2022/02/chapman-athletics-logo.png);
+        background-size: 8%;
+        background-position-x: 80%;
+        background-position-y: 10%;
+        background-repeat: no-repeat;
+    }
+}

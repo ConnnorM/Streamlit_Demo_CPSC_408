@@ -52,3 +52,10 @@ if submit:
     edited_df = DB_Functions.get_all_records(choose_relation)
     # Display the relation as a dataframe with the primary key as the index
     st.dataframe(edited_df.set_index(rel_id))
+
+# -----------------------------------------------------------------------------------
+# CSS File Import
+with open('./Helpers/CSS_Stuff.css') as f:
+    css = f.read()
+
+st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)

@@ -10,8 +10,8 @@
     - The demo will open in your browser and is hosted locally on your computer
 
 ## Run the GUI Demo:
-- Open the GUI_Demo folder in a terminal and type the following command:
-    - streamlit run Demo.py
+- Open the GUI_Demo/Full_Demo folder in a terminal and type the following command:
+    - streamlit run Full_Demo.py
 
 ## Streamlit Learning Resources:
 - Basic Concepts of How Streamlit Works: https://docs.streamlit.io/get-started/fundamentals/main-concepts
@@ -20,7 +20,7 @@
 - Create Multi-Page Apps: https://docs.streamlit.io/get-started/tutorials/create-a-multipage-app
 - Deploying App to the Web: https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app
     - NOTE: Streamlit Cloud supports up to Python 3.9. This isn't a huge deal, but you can't do certain things if they were added in a later version of Python (for example, switch statements were added in Python 3.10. So, if your app is only running locally, you can use switch statements if your Python version is 3.10+. However, if you're running the app in the cloud,
-    you'll get complier errors since that syntax doesn't exist in Python 3.9.)
+    you'll get complier errors since that syntax doesn't exist in Python 3.9).
 - Emoji Shortcodes: https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app/
 
 ## Talking Points for Live Demo of This App:
@@ -30,7 +30,7 @@
     - For example, one of the super cool features of Streamlit is the ability to run machine learning models inside your app and allow the user to change parameters of the model within the GUI and rerun that model to see the results.
 - When you change something in your GUI, it reruns that page's Python file from the top down.
     - Mention cache_data/resource here.
-- Streamlit has a connection object, but I would recommend connecting to your database in the databases' native process.
+- Streamlit has a connection object, but I would recommend connecting to your database in the database's native process.
     - The Streamlit connection object is a weird wrapper thing that's supposed to make it easy to connect to data, but I don't think it actually makes anything easier. It just adds more potential failure points.
         - For example, just use the SQLite3 library that's built in to Python instead of using streamlit.connection() to create a SQL connection.
 - You cannot use Streamlit with notebook files (.ipynb); you have to use a regular Python file (.py).
@@ -48,11 +48,15 @@
 - Session State
 - Chart
 - HTML/CSS Customization
-    - Search Render HTML
 - Dark Mode
 
-### CSS Resources
+### Customization Learning Resources
+- Create Custom Theme for Streamlit
+    - https://www.youtube.com/watch?v=Mz12mlwzbVU&t=218s
 - Using CSS with Streamlit
     - https://www.akratech.com/customizing-streamlit-apps-by-rendering-html/
-- try youtube videos? a calculator one seems promising enough
-- https://blog.streamlit.io/how-to-build-your-own-streamlit-component/
+    - https://discuss.streamlit.io/t/how-to-use-a-css-file-to-change-the-background-style/36418/4
+- Basic CSS Introduction
+    - https://www.w3schools.com/css/css_intro.asp
+- Create Your Own Streamlit Components
+    - https://blog.streamlit.io/how-to-build-your-own-streamlit-component/

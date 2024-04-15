@@ -11,9 +11,6 @@ import sqlite3
 # Set the default configuration for our GUI
 st.set_page_config(page_title="CPSC 408 Demo", layout="wide", page_icon=":wave:")
 
-
-
-
 # Create the SQL connection to movie_reviews_db
 conn = sqlite3.connect("movie_reviews_db.db", check_same_thread=False)
 c = conn.cursor()
@@ -68,4 +65,11 @@ c1 = '''
 st.code(c1, language='python')
 # Another subheader followed by a blue divider line
 st.subheader("Now What?", divider="blue")
-st.write("Click on a page in the sidebar to the left to see the SQL demos.")
+st.markdown("**:point_left: Click on a page in the sidebar to the left to see the SQL demos.**")
+
+# -----------------------------------------------------------------------------------
+# CSS File Import
+with open('./Helpers/CSS_Stuff.css') as f:
+    css = f.read()
+
+st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
