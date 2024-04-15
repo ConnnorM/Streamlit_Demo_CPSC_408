@@ -6,7 +6,7 @@ st.title(":orange[A Graph :o]")
 
 y_axis = st.selectbox(options=['Rotten Tomatoes %',
                                'Year'],
-                      label="Select the Y axis")
+                      label="**Select the Y axis**")
 
 st.scatter_chart(data=st.session_state.movies_df,
                  x="Film",
